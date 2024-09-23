@@ -1,8 +1,14 @@
 version: "3.9"
 networks:
   geth-network:
-    external: true
+    # external: true
     name: geth-network
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.220.0.0/16
+          gateway: 10.220.0.1
+
 
 services:
   # Creates a genesis state for the beacon chain using a YAML configuration file and
@@ -23,7 +29,8 @@ services:
       - ./consensus:/consensus
       - ./execution:/execution
     networks:
-      - geth-network  
+      geth-network:
+        ipv4_address: 10.220.0.10  
 
   # Removes the database of the go-ethereum execution client to ensure we start from a clean state.
   # (geth has a `removedb` option, but it asks for a keyboard confirmation, so we use this instead)
@@ -114,7 +121,8 @@ services:
       - ./geth1/keystore:/app/geth1/keystore
       - ./geth1/geth_password.txt:/app/geth1/geth_password.txt
     networks:
-      - geth-network
+      geth-network:
+        ipv4_address: 10.220.0.10  
   geth2:
     image:  node:v1.1.1
     container_name: geth2
@@ -130,7 +138,8 @@ services:
       - ./geth2/keystore:/app/geth2/keystore
       - ./geth2/geth_password.txt:/app/geth2/geth_password.txt    
     networks:
-      - geth-network
+      geth-network:
+        ipv4_address: 10.220.0.11  
   geth3:
     image: node:v1.1.1
     container_name: geth3
@@ -148,7 +157,8 @@ services:
       - ./geth3/keystore:/app/geth3/keystore
       - ./geth3/geth_password.txt:/app/geth3/geth_password.txt
     networks:
-      - geth-network
+      geth-network:
+        ipv4_address: 10.220.0.12  
   # We run a validator client with 64, deterministically-generated keys that match
   # The validator keys present in the beacon chain genesis state generated a few steps above.
   validator:
