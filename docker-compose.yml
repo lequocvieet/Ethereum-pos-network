@@ -6,8 +6,8 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 10.220.0.0/16
-          gateway: 10.220.0.1
+        - subnet: 10.22.0.0/16
+          gateway: 10.22.0.1
 
 
 services:
@@ -28,9 +28,9 @@ services:
     volumes:
       - ./consensus:/consensus
       - ./execution:/execution
-    networks:
-      geth-network:
-        ipv4_address: 10.220.0.10  
+    # networks:
+    #   geth-network:
+    #     ipv4_address: 10.22.0.10  
 
   # Removes the database of the go-ethereum execution client to ensure we start from a clean state.
   # (geth has a `removedb` option, but it asks for a keyboard confirmation, so we use this instead)
@@ -62,6 +62,9 @@ services:
       - ./geth3/genesis.json:/geth3/genesis.json  
       - ./geth3:/geth3
 
+
+
+  
   # Runs a Prysm beacon chain from a specified genesis state created in the previous step
   # and connects to go-ethereum in the same network as the execution client.
   # The account used in go-ethereum is set as the suggested fee recipient for transactions
@@ -112,7 +115,7 @@ services:
     container_name: geth1
     ports:
       - 8545:8545  # HTTP-RPC
-      - 30301:30303  # P2P port      
+      - 8546:8546  #WS
 
     volumes:
       - ./bin:/app/bin
@@ -122,15 +125,15 @@ services:
       - ./geth1/geth_password.txt:/app/geth1/geth_password.txt
     networks:
       geth-network:
-        ipv4_address: 10.220.0.10  
+        ipv4_address: 10.22.0.10  
   geth2:
     image:  node:v1.1.1
     container_name: geth2
     working_dir: /app
     command: make geth2
     ports:
-      - 8546:8546
-      - 30303:30303  # P2P port      
+      - 8547:8545
+      - 8548:8546  #WS
     volumes:
       - ./bin:/app/bin
       - ./Makefile:/app/Makefile
@@ -139,16 +142,15 @@ services:
       - ./geth2/geth_password.txt:/app/geth2/geth_password.txt    
     networks:
       geth-network:
-        ipv4_address: 10.220.0.11  
+        ipv4_address: 10.22.0.11  
   geth3:
     image: node:v1.1.1
     container_name: geth3
     working_dir: /app
     command: make geth3
     ports:
-      - 8551:8551
-      - 8545:8545
-      - 8546:8546
+      - 8549:8545
+      - 8550:8546
     
     volumes:
       - ./bin:/app/bin
@@ -158,7 +160,22 @@ services:
       - ./geth3/geth_password.txt:/app/geth3/geth_password.txt
     networks:
       geth-network:
-        ipv4_address: 10.220.0.12  
+        ipv4_address: 10.22.0.12  
+
+  prysm:
+    image: node:v1.1.1
+    container_name: prysm
+    working_dir: /app
+    command: make prysm
+    volumes: 
+      - ./Makefile:/app/Makefile
+      - ./consensus:/app/consensus
+    networks:
+      geth-network:
+        ipv4_address: 10.22.0.13    
+
+    
+
   # We run a validator client with 64, deterministically-generated keys that match
   # The validator keys present in the beacon chain genesis state generated a few steps above.
   validator:
