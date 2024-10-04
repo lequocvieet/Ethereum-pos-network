@@ -180,6 +180,7 @@ VALIDATOR_REAL="${wrapper_dir}/validator-${prysm_version}-${system}-${arch}"
 CLIENT_STATS_REAL="${wrapper_dir}/client-stats-${prysm_version}-${system}-${arch}"
 
 if [[ $1 == beacon-chain ]]; then
+    echo "beacon chain real is: $BEACON_CHAIN_REAL"
     if [[ ! -x $BEACON_CHAIN_REAL ]]; then
         color "34" "Downloading beacon chain@${prysm_version} to ${BEACON_CHAIN_REAL} (${reason})"
         if [ "${USE_PRYSM_MODERN}" = "true" ]; then

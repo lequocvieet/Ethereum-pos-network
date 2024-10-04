@@ -6,8 +6,8 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 10.22.0.0/16
-          gateway: 10.22.0.1
+        - subnet: 166.22.0.0/16
+          gateway: 166.22.0.1
 
 
 services:
@@ -121,11 +121,12 @@ services:
       - ./bin:/app/bin
       - ./Makefile:/app/Makefile
       - ./geth1/jwtsecret:/app/geth1/jwtsecret
+      - ./geth1/geth/nodekey:/app/geth1/geth/nodekey
       - ./geth1/keystore:/app/geth1/keystore
       - ./geth1/geth_password.txt:/app/geth1/geth_password.txt
     networks:
       geth-network:
-        ipv4_address: 10.22.0.10  
+        ipv4_address: 166.22.0.10  
   geth2:
     image:  node:v1.1.1
     container_name: geth2
@@ -139,10 +140,11 @@ services:
       - ./Makefile:/app/Makefile
       - ./geth2/jwtsecret:/app/geth2/jwtsecret
       - ./geth2/keystore:/app/geth2/keystore
+      - ./geth2/geth/nodekey:/app/geth2/geth/nodekey
       - ./geth2/geth_password.txt:/app/geth2/geth_password.txt    
     networks:
       geth-network:
-        ipv4_address: 10.22.0.11  
+        ipv4_address: 166.22.0.11  
   geth3:
     image: node:v1.1.1
     container_name: geth3
@@ -156,11 +158,12 @@ services:
       - ./bin:/app/bin
       - ./Makefile:/app/Makefile
       - ./geth3/jwtsecret:/app/geth3/jwtsecret
+      - ./geth3/geth/nodekey:/app/geth3/geth/nodekey
       - ./geth3/keystore:/app/geth3/keystore
       - ./geth3/geth_password.txt:/app/geth3/geth_password.txt
     networks:
       geth-network:
-        ipv4_address: 10.22.0.12  
+        ipv4_address: 166.22.0.12  
 
   prysm:
     image: node:v1.1.1
