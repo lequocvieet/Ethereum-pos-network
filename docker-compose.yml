@@ -171,11 +171,13 @@ services:
     working_dir: /app
     command: make prysm
     volumes: 
+      - ./bin:/app/bin      
       - ./Makefile:/app/Makefile
       - ./consensus:/app/consensus
+      - ./prysm:/app/prysm
     networks:
       geth-network:
-        ipv4_address: 10.22.0.13    
+        ipv4_address: 166.22.0.13    
 
     
 

@@ -1,4 +1,4 @@
-.PHONY:  geth1 geth2 geth3
+.PHONY:  geth1 geth2 geth3 prysm
 PWD=/app
 NODEKEY1=31cc58c833115e360122ea07d56a69522c359d0a78e01899789752e61c46750c0dc802a0e7f7e122ba47d1761cab704b58038f64e0ecf0ea40bfc16562b6068a
 NODEKEY2=ed83d43e24c57a4fabefbb69a82de1023b76109eb130f3fdfe95dae8d159c5eb2b44253adf52cc162182e851d17a39dd5791d0f998750b1c37cc3ce4b9fd76fc
@@ -24,8 +24,9 @@ geth3:
 	./bin/geth --networkid 100 --http --http.api=eth,net,web3 --http.addr=0.0.0.0  --http.corsdomain=* --ws --ws.api=eth,net,web3   --ws.addr=0.0.0.0 --ws.origins=* --authrpc.vhosts=* --authrpc.addr=0.0.0.0 --authrpc.jwtsecret=./geth3/jwtsecret --datadir=./geth3 --nodekey=./geth3/geth/nodekey --allow-insecure-unlock --unlock=0x123463a4b065722e99115d6c222f267d9cabb524 --password=./geth3/geth_password.txt  --syncmode=full --verbosity=3 --log.format=terminal  --bootnodes=${ENODE_ADDRESS}
 
 prysm:
-	chmod +x ./consensus/prysm.sh
-	./consensus/dist/beacon-chain-v5.1.0-linux-amd64 beacon-chain --execution-endpoint=http://${IPGETH1}:8545  --verbosity=debug
+	chmod +x ./bin/beacon-chain
+	./bin/beacon-chain  --datadir=./prysm --min-sync-peers=0 --jwt-secret=./prysm/jwtsecret   --execution-endpoint=http://${IPGETH1}:8545  --verbosity=debug  --suggested-fee-recipient=0x123463a4b065722e99115d6c222f267d9cabb524 --minimum-peers-per-subnet=0 --accept-terms-of-use  
+#--chain-config-file=./prysm/config.yml
 
 
 
